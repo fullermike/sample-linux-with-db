@@ -5,8 +5,22 @@ version: '3.1'
 # ./data_dir - WebApp data directory
 # ./server-logs - placeholder for webserver logs
 
+networks:
+  webservice:
+    name: shared-web
+
+
 services:
+  nginx-app:
+    container_name: nginx-app
+    image: nginxdemos/hello
+    ports:
+      - 81:80
+    networks: 
+      - webservice
+
   db:
+    container_name: postgres-db
     image: postgres:latest
     restart: always
     environment:
@@ -18,8 +32,11 @@ services:
       - ./docker_data_postgresql:/var/lib/postgresql/data
     ports:
       - 5433:5432
+    networks: 
+      - webservice
 
   ubuntu:
+    container_name: ubuntu-image
     image: ubuntu:latest
     stdin_open: true
     tty: true
@@ -30,3 +47,5 @@ services:
       - ./docker_data_ubuntu:/docker_data_ubuntu/
     depends_on:
       - db
+    networks: 
+      - webservice
