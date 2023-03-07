@@ -1,0 +1,32 @@
+version: '3.1'
+# Default ${APP_VERSION} is defined in .env file
+
+# ./buildserver_pgdata - Posgres DB data
+# ./data_dir - WebApp data directory
+# ./server-logs - placeholder for webserver logs
+
+services:
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+      - PG_DATA=/var/lib/postgresql/data
+    volumes:
+      - ./docker_data_postgresql:/var/lib/postgresql/data
+    ports:
+      - 5433:5432
+
+  ubuntu:
+    image: ubuntu:latest
+    stdin_open: true
+    tty: true
+    user: root
+    ports:
+      - "80:8111"
+    volumes:
+      - ./docker_data_ubuntu:/docker_data_ubuntu/
+    depends_on:
+      - db
