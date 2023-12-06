@@ -5,18 +5,17 @@
 ## First Time
 - > docker-compose up
 
-## Stopping or Starting instances
+## Stopping instances
 
 - > docker-compose stop
-- > docker-compose start
 
 #### Stop services from the terminal where compose start or compose up was performed
 - > CTRL + C
 
 ## Resume instances (without rebuilding)
 
-#### Start all images
+#### to start all images
 - > docker-compose start
 
-#### Start specific images
-- > docker-compose start postgres
+#### to start specific images
+- > docker-compose start postgres-db

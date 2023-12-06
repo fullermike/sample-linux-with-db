@@ -1,27 +1,44 @@
 version: '3.1'
 # Default ${APP_VERSION} is defined in .env file
 
+# To Run, open a terminal at this file's directory:
+# > docker-compose up
+# 
+# open a web browser to localhost:15432
+# 
+# Email / Username = admin@pgadmin.com
+# Password         = password
+# 
+# Click Login
+# Add New Server
+# 
+# General > Name: (can be anything)
+# Connection > Host name/address: postgres
+# Connection > Port: 5432
+# Connection > Maintenance database: postgres
+# Connection > Username: postgres
+# Connection > Password: postgres
+# 
+# Click Save
+# Find Data under Databases > postgres > Schemas > public > Tables
+# Done.
+
+# Local Folders 
+# 
 # ./buildserver_pgdata - Posgres DB data
 # ./data_dir - WebApp data directory
 # ./server-logs - placeholder for webserver logs
-
+# 
 networks:
   webservice:
     name: shared-web
-
-
+    external: true
 services:
-  nginx-app:
-    container_name: nginx-app
-    image: nginxdemos/hello
-    ports:
-      - 81:80
-    networks: 
-      - webservice
-
-  db:
-    container_name: postgres-db
-    image: postgres:latest
+  postgres:
+    container_name: postgres-db-16.1
+    # image: postgres:15.5
+    # image: postgres:15.5
+    image: postgres:16.1
     restart: always
     environment:
       - POSTGRES_PASSWORD=postgres
@@ -30,22 +47,51 @@ services:
       - PG_DATA=/var/lib/postgresql/data
     volumes:
       - ./docker_data_postgresql:/var/lib/postgresql/data
+      - ./docker_data_postgresql_dropbox:/windows_dropbox
     ports:
-      - 5433:5432
+      - 5432:5432
     networks: 
       - webservice
-
-  ubuntu:
-    container_name: ubuntu-image
-    image: ubuntu:latest
-    stdin_open: true
-    tty: true
-    user: root
+# 
+# pgAdmin4 - to interact with the postgres database
+# Reference: https://www.pgadmin.org/docs/pgadmin4/latest/container_deployment.html
+# 
+  pgadmin:
+    image: dpage/pgadmin4:8.0
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@pgadmin.com
+      PGADMIN_DEFAULT_PASSWORD: password
+      PGADMIN_LISTEN_PORT: 80
     ports:
-      - "80:8111"
+      - 15432:80
     volumes:
-      - ./docker_data_ubuntu:/docker_data_ubuntu/
+      - .docker_data_pgadmin:/var/lib/pgadmin
     depends_on:
-      - db
+      - postgres
     networks: 
       - webservice
+  # 
+  ## The "ubuntu" container - A simple linux box, as-needed to test shell scripts (if the postgres "db" image doesn't cut it)
+  # 
+  # ubuntu:
+  #   container_name: ubuntu-image
+  #   image: ubuntu:latest
+  #   stdin_open: true
+  #   tty: true
+  #   user: root
+  #   ports:
+  #     - 80:8111
+  #   volumes:
+  #     - ./docker_data_ubuntu:/docker_data_ubuntu/
+  #   networks: 
+  #     - webservice
+  # 
+  ## The "nginx-app" container - A hello-world simple nginx app, an example for running nginx with docker-compose.
+  # 
+  # nginx-app:
+  #   container_name: nginx-app
+  #   image: nginxdemos/hello
+  #   ports:
+  #     - 81:80
+  #   networks: 
+  #     - webservice
