@@ -2,3 +2,6 @@
 .docker_data_pgadmin/*
 old_docker_data_postgresql_dropbox/*
 old_docker_data_ubuntu/*
+pgadmin/*
+postgres/*
+postgres_dropbox/*

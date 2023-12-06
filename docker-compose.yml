@@ -46,8 +46,8 @@ services:
       - POSTGRES_DB=postgres
       - PG_DATA=/var/lib/postgresql/data
     volumes:
-      - ./docker_data_postgresql:/var/lib/postgresql/data
-      - ./docker_data_postgresql_dropbox:/windows_dropbox
+      - ./postgres:/var/lib/postgresql/data
+      - ./postgres_dropbox:/windows_dropbox
     ports:
       - 5432:5432
     networks: 
@@ -65,7 +65,7 @@ services:
     ports:
       - 15432:80
     volumes:
-      - .docker_data_pgadmin:/var/lib/pgadmin
+      - ./pgadmin:/var/lib/pgadmin
     depends_on:
       - postgres
     networks: 
