@@ -1,7 +1,7 @@
 version: '3.1'
 # Default ${APP_VERSION} is defined in .env file
 
-# To Run, open a terminal at this file's directory:
+# To Run all services, open a terminal at this file's directory:
 # > docker-compose up
 # 
 # open a web browser to localhost:15432
@@ -34,7 +34,15 @@ networks:
     name: shared-web
     external: true
 services:
-  postgres:
+  # The service name is the top identifier before its details.
+  #    when using docker-compose, you can start or stop a specific service by name.
+  # 
+  # For example, to start up the 'postgres' service for the first time: 
+  #  step 1) open a terminal 
+  #  step 2) type the following command
+  #        > docker-compose up postgres
+  # ------------------------------------
+  postgres: 
     container_name: postgres-db-16.1
     # image: postgres:15.5
     # image: postgres:15.5
@@ -52,10 +60,10 @@ services:
       - 5432:5432
     networks: 
       - webservice
-# 
-# pgAdmin4 - to interact with the postgres database
-# Reference: https://www.pgadmin.org/docs/pgadmin4/latest/container_deployment.html
-# 
+  # 
+  # pgAdmin4 - to interact with the postgres database
+  # Reference: https://www.pgadmin.org/docs/pgadmin4/latest/container_deployment.html
+  # 
   pgadmin:
     image: dpage/pgadmin4:8.0
     environment:
